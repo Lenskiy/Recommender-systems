@@ -8,14 +8,28 @@ function [avgPrediction, stdPrediction,...
           estLiklihoodFn,...
           estPosteriorProbabilityFn)
         
+    corThreshold = 0.1; % two generes are consideted to be similar if their cor. coef is above corThreshold
+    testingPortion = 0.2;
+    
     numRtype = sum((unique(R) ~= 0));
     Nitems = size(R,2);
     Ncatergoies = size(G,2);
     maxNumOfGenPerMovies = max(sum(G~=0, 2));
     [corMat, ~] = corr(G, 'rows','pairwise');
-    
-    corThreshold = 0.1; % two generes are consideted to be similar if their cor. coef is above corThreshold
-    testingPortion = 0.2;
+%     corMat(logical(eye(size(corMat)))) = 0;
+%     imagesc(corMat), hold on;
+%     colorbar;
+%     ax = gca;
+%     ax.XTick = [1:Ngenres];
+%     ax.YTick = [1:Ngenres];
+%     ax.XTickLabel = movie_genre;
+%     ax.YTickLabel = movie_genre;
+%     set(gca, 'XTickLabelRotation', 45)
+%     
+%     [i, j] = find(corMat > corThreshold);
+%     upperInd = i > j;
+%     plot(i(upperInd),j(upperInd), '.r','MarkerSize', 20);
+
     
 %     Rs = zeros(size(R, 1), size(R, 2), numRtype);
 %     for r = 1:numRtype

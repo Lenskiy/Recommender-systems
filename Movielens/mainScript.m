@@ -28,7 +28,7 @@ end
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ntrials = 1000;
+Ntrials = 10;
 % estUserPreferencesFn = @estimate_user_probability; %estimate_prior_probability;
 % estLiklihoodFn = @estimate_multinomial_item_likelihood;
 % estPosteriorProbabilityFn = @estimate_posterior_probability;
@@ -48,14 +48,18 @@ testingPortion = [0.05, 0.1:0.1:0.8];
 [mostActiveUsersInds, ratingPortion] = mostActiveUsers(466, R);
 [leastActiveUsersInds, ratingPortion] = leastActiveUsers(4110, R);
 
+length(intersect(topCriticsInds, mostActiveUsersInds)) / length(mostActiveUsersInds)
+length(intersect(topCriticsInds, leastActiveUsersInds)) / length(topCriticsInds)
+length(intersect(topCriticsInds, leastActiveUsersInds)) / length(leastActiveUsersInds)
+
 for r = 1:5
-    h_ratings(r, 1) = 0.3 * sum(sum(R == r));
+    h_ratings(r, 1) =  sum(sum(R == r));
     h_ratings(r, 2) = sum(sum(R(topCriticsInds,:) == r));
     h_ratings(r, 3) = sum(sum(R(mostActiveUsersInds,:) == r));
     h_ratings(r, 4) = sum(sum(R(leastActiveUsersInds,:) == r));
 end
 
-visualizeHistogram(h_ratings, [1, 2, 3, 4, 5], {'all users', 'critics', 'most active', 'least active'});
+visualizeHistogram(h_ratings, [1, 2, 3, 4, 5], {'all users', 'critics', 'more active', 'less active'});
 
 
 [avgPredictionCr, stdPredictionCr,...

@@ -14,5 +14,4 @@ function [Pr_Category, Pr_UratedC] = buildUserPrefenceModel(R, G)
     end
  
 	Pr_Category = (sum(G) + 1)/( sum(sum(G)) + size(G,2));
-    
 end
