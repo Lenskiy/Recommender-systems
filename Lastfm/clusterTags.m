@@ -1,9 +1,9 @@
-function [Lf, G, groups, tagGroups, popularity] = clusterTags(L, T, K, TAGS_name, tagged_ARTISTS, prunedTagsIDs)
+function [Lf, G, Tp, groups, tagGroups, popularity] = clusterTags(L, T, K, TAGS_name, tagged_ARTISTS, prunedTagsIDs)
     uniqueTagsIDs = unique(tagged_ARTISTS(:,3));
 
-    opts = statset('Display','iter','UseParallel', true, 'MaxIter', 1000);
+    opts = statset('Display','iter','UseParallel', true, 'MaxIter', 10000);
 
-    [idxbest, Cbest, sumDbest, Dbest] = kmeans(T', K,'Distance','correlation', 'Start', 'cluster','EmptyAction', 'drop');
+    [idxbest, Cbest, sumDbest, Dbest] = kmeans(T', K,'Distance','correlation', 'Start', 'cluster','EmptyAction', 'drop', 'Replicates', 10);
     
     for i = 1:K
         groups{i} = find(idxbest == i);
@@ -25,5 +25,6 @@ function [Lf, G, groups, tagGroups, popularity] = clusterTags(L, T, K, TAGS_name
     end
     nonnan_id = find(~isnan(sum(Gtemp,2)));
     G = Gtemp(nonnan_id, :);
-    Lf = L(:, nonnan_id);    
+    Lf = L(:, nonnan_id);
+    Tp = T(nonnan_id, :);
 end

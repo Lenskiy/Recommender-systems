@@ -28,13 +28,13 @@ end
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ntrials = 10;
+Ntrials = 1000;
 % estUserPreferencesFn = @estimate_user_probability; %estimate_prior_probability;
 % estLiklihoodFn = @estimate_multinomial_item_likelihood;
 % estPosteriorProbabilityFn = @estimate_posterior_probability;
 
 estUserPreferencesFn = @buildUserPrefenceModel; % slightly different from @estimate_user_probability
-estLiklihoodFn = @estimateCondititonalMultinomial; %estimateCondititonalBernoulli;
+estLiklihoodFn = @estimateCondititonalBernoulli; %estimateCondititonalBernoulli; estimateCondititonalMultinomial
 estPosteriorProbabilityFn = @estimatePosteriorProbability;
 
 testingPortion = [0.05, 0.1:0.1:0.8];
@@ -90,20 +90,20 @@ visualizeCategoryPredictionRates(avgPredictionCombinedLA, stdPredictionCombinedL
 
 labels = {'r = 1', 'r = 2','r = 3','r = 4','r = 5'};
 visualizeCategoryPredictionRates(avgPrediction, stdPrediction, testingPortion, labels, true, struct('LineWidth', 2, 'LineStyle', '-'));
-visualizeCategoryPredictionRates(avgPredictionSim, stdPredictionSim, testingPortion, labels, false, struct('Linewidth', 1, 'LineStyle', ':'));
+visualizeCategoryPredictionRates(avgPredictionSim, stdPredictionSim, testingPortion, labels, true, struct('Linewidth', 1, 'LineStyle', '--'));
 
 
 
 visualizeCategoryPredictionRates(avgPredictionCr, stdPredictionCr, testingPortion, labels, true, struct('LineWidth', 2, 'LineStyle', '-'));
-visualizeCategoryPredictionRates(avgPredictionSimCr, stdPredictionSimCr, testingPortion, labels, false, struct('Linewidth', 1, 'LineStyle', ':'));
+visualizeCategoryPredictionRates(avgPredictionSimCr, stdPredictionSimCr, testingPortion, labels, true, struct('Linewidth', 1, 'LineStyle', '--'));
 
 
 visualizeCategoryPredictionRates(avgPredictionExp, stdPredictionExp, testingPortion, labels, true, struct('LineWidth', 2, 'LineStyle', '-'));
-visualizeCategoryPredictionRates(avgPredictionSimExp, stdPredictionSimExp, testingPortion, labels, false, struct('Linewidth', 1, 'LineStyle', ':'));
+visualizeCategoryPredictionRates(avgPredictionSimExp, stdPredictionSimExp, testingPortion, labels, true, struct('Linewidth', 1, 'LineStyle', '--'));
 
 
 visualizeCategoryPredictionRates(avgPredictionLA, stdPredictionLA, testingPortion, labels, true, struct('LineWidth', 2, 'LineStyle', '-'));
-visualizeCategoryPredictionRates(avgPredictionSimLA, stdPredictionSimLA, testingPortion, labels, false, struct('Linewidth', 1, 'LineStyle', ':'));
+visualizeCategoryPredictionRates(avgPredictionSimLA, stdPredictionSimLA, testingPortion, labels, true, struct('Linewidth', 1, 'LineStyle', '--'));
 
 
 

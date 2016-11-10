@@ -68,8 +68,8 @@ function [avgPrediction, stdPrediction,...
             G_train = G(training_subset_ind,:);
             G_test = G(testing_subset_ind,:);
             
-            trueGenreCategories = cell(Nitems_test);
-            trueCategoriesIncSimilar = cell(Nitems_test);
+            trueGenreCategories = cell(Nitems_test, 1);
+            trueCategoriesIncSimilar = cell(Nitems_test, 1);
             for l = 1:Nitems_test
                 %counting correct prediction of exact categories 
                 trueGenreCategories{l} = find(G_test(l,:) ~= 0);

@@ -3,7 +3,7 @@ function logPr_ItemInCategory = estimateCondititonalMultinomial(R, Pr_UratedC)
     Nusers = size(R,1);       %number of users
     Ncategories = size(Pr_UratedC, 2);  %number of genres
 
-    available_memory = 2^24; %30
+    available_memory = 2^30; %30
     
     div_coef = ceil(size(R,1) * size(R,2) * 8  / available_memory);
     Nusers_part = floor(Nusers/div_coef);
