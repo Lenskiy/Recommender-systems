@@ -114,6 +114,33 @@ avgPredictionSim4 = cell(Nclustering);
 stdPrediction4 = cell(Nclustering);
 stdPredictionSim4 = cell(Nclustering);
  
+for k = 1:Nclustering
+k
+    [L, G, Tp, groups, tag_groups, popularity] = clusterTags(Lp, Tp, K, TAGS_name, tagged_ARTISTS, prunedTagsIDs);
+    tag_groups_all{k} = tag_groups;
+    groups_all{k} = groups;
+    % Bernoulli
+    [avgPredictionBer{k}, stdPredictionBer{k},...
+    avgPredictionSimBer{k}, stdPredictionSimBer{k}]...
+    = estimateBayesianTagClusterPrediction(L, G, Ntrials, testingPortion, estUserPreferencesFn, @estimateCondititonalBernoulli, estPosteriorProbabilityFn);
+    % Multinomial
+    [avgPrediction1{k}, stdPrediction1{k},...
+    avgPredictionSim1{k}, stdPredictionSim1{k}]...
+    = estimateBayesianTagClusterPrediction(L, G, Ntrials, testingPortion, estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
+    % round(log2(Lf + 1))
+    [avgPrediction2{k}, stdPrediction2{k},...
+    avgPredictionSim2{k}, stdPredictionSim2{k}]...
+    = estimateBayesianTagClusterPrediction(round(log2(L + 1)), G, Ntrials, testingPortion,estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
+    % round(log10(Lf + 1))
+    [avgPrediction3{k}, stdPrediction3{k},...
+    avgPredictionSim3{k}, stdPredictionSim3{k}]...
+    = estimateBayesianTagClusterPrediction(round(log10(L + 1)), G, Ntrials, testingPortion,estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
+    % double(Lf ~= 0)
+    [avgPrediction4{k}, stdPrediction4{k},...
+    avgPredictionSim4{k}, stdPredictionSim4{k}]...
+    = estimateBayesianTagClusterPrediction(double(L ~= 0), G, Ntrials, testingPortion,estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
+end
+
 
 % visualizeCategoryPredictionRates(avgPrediction1(:, 1), stdPrediction1(:, 1), testingPortion, {'MN: 1 category'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
 % visualizeCategoryPredictionRates(avgPredictionSim1(:, 1), stdPredictionSim1(:, 1), testingPortion, {'MN: 1 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
