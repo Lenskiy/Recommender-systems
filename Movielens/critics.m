@@ -6,5 +6,5 @@ function [topCriticsInds, ratingPortion] = critics(numUsers, R)
     [~,inds] = sort(stdUsersRating, 'descend');
     totRatings = sum(sum(R ~= 0));
     topCriticsInds = inds(1:numUsers);
-    ratingPortion = sum(sum(R(topCriticsInds, :) ~= 0))/totRatings % precentage of all given ratings
+    ratingPortion = sum(sum(R(topCriticsInds, :) ~= 0))/totRatings; % precentage of all given ratings
 end
