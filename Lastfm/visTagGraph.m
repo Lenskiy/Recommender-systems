@@ -28,7 +28,12 @@ function [H,  colors] = visTagGraph(A, groups, popularity, uniqueTagsIDs, pruned
     colors(12, :) = [0.75 0 0.75];
     colors(13, :) = [0.75 0.75 0];
     colors(14, :) = [0.25 0.25 0.2];    
-    colors(15, :) = [0.1 .8 0.1];  
+    colors(15, :) = [0.1 .8 0.1];
+    colors(16, :) = [0    0.7255    0.0902];
+    colors(17, :) = [0.4706    0.5098    0.1922];
+    colors(18, :) = [0    1.0000    0.7765];
+    colors(19, :) = [1.0000    0.4314    0.254];
+    colors(20, :) = [0.9098    0.3686    0.7451];
 
     set(groot,'defaultAxesColorOrder',colors);
     

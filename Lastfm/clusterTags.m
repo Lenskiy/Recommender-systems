@@ -25,12 +25,12 @@ function [Lf, G, Tp, groups, tagGroups, tagsPopularity] = clusterTags(L, T, K, T
 
     pAandT = T/sum(sum(T));
     pAnadC = zeros(size(T,1), K);
-    pC = zeros(K, 1);
-    tagsPopularity = sum(T);
+    %pC = zeros(K, 1);
+    %tagsPopularity = sum(T);
     
 	for k = 1:K
         groups{k} = find(idxbest == k);
-        pC(k) = sum(tagsPopularity(groups{k}))/sum(tagsPopularity);
+        %pC(k) = sum(tagsPopularity(groups{k}))/sum(tagsPopularity);
         for a = 1:size(T,1)
             pAnadC(a, k) = pAnadC(a, k) +  sum(pAandT(a, groups{k}));
         end

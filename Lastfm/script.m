@@ -51,7 +51,7 @@ bar(tagsUsed(1:99)/sum(hist_tags)); xlabel('$k$', 'Interpreter', 'Latex'); ylabe
 % disp(['cor( ' TAGS_name{uniqueTagsIDs(cor_tags(1)),2} ' & ' TAGS_name{uniqueTagsIDs(cor_tags(2)),2} ') = ', num2str(C(cor_tags(1),cor_tags(2)))]);
 
 %% Tag clustering
-K = 10; % number of tag clusters, which are treated as genres
+K = 20; % number of tag clusters, which are treated as genres
 [Lp, Tp, prunedTagsIDs]= prepocessForClustering(L_, T, 5, 50);
 [Lf, G, Tp, groups, tag_groups, popularity] = clusterTags(Lp, Tp, K, TAGS_name, tagged_ARTISTS, prunedTagsIDs);
 
