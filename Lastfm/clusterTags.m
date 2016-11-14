@@ -1,9 +1,9 @@
-function [Lf, G, Tp, groups, tagGroups, tagsPopularity] = clusterTags(L, T, K, TAGS_name, tagged_ARTISTS, prunedTagsIDs)
+function [Lf, pG, G, Tp, groups, tagGroups, tagsPopularity] = clusterTags(L, T, K, TAGS_name, tagged_ARTISTS, prunedTagsIDs)
     uniqueTagsIDs = unique(tagged_ARTISTS(:,3));
     
     opts = statset('Display','iter','UseParallel', true, 'MaxIter', 10000);
 
-    [idxbest, Cbest, sumDbest, Dbest] = kmeans(T', K,'Distance','correlation', 'Start', 'cluster','EmptyAction', 'drop', 'Replicates', 10);
+    [idxbest, centroids, sumDbest, Dbest] = kmeans(T', K,'Distance','correlation', 'Start', 'cluster','EmptyAction', 'drop', 'Replicates', 10);
 
 %     for i = 1:K
 %         groups{i} = find(idxbest == i);
@@ -26,7 +26,7 @@ function [Lf, G, Tp, groups, tagGroups, tagsPopularity] = clusterTags(L, T, K, T
     pAandT = T/sum(sum(T));
     pAnadC = zeros(size(T,1), K);
     %pC = zeros(K, 1);
-    %tagsPopularity = sum(T);
+    tagsPopularity = sum(T);
     
 	for k = 1:K
         groups{k} = find(idxbest == k);
@@ -50,7 +50,8 @@ function [Lf, G, Tp, groups, tagGroups, tagsPopularity] = clusterTags(L, T, K, T
     
     
     nonnan_id = find(~isnan(sum(pCgivenA,2)));
-    G = pCgivenA(nonnan_id, :);
+    pG = pCgivenA(nonnan_id, :);
     Lf = L(:, nonnan_id);
     Tp = T(nonnan_id, :);
+    G = ceil(reduceGtoNcategories(pG, 3, centroids));
 end

@@ -99,56 +99,56 @@ estUserPreferencesFn = @buildUserPrefenceModel; % slightly different from @estim
 estLiklihoodFn = @estimateCondititonalBernoulli; %; estimateCondititonalMultinomial % estimateCondititonalBernoulli
 estPosteriorProbabilityFn = @estimatePosteriorProbability;
 
-testingPortion = [0.05, 0.1:0.1:0.8];
+testingPortion = [0.01, 0.05, 0.1:0.1:0.8];
 
 Ntrials = 100;
-Nclustering = 100;
-avgPredictionBer  = cell(Nclustering, 1);
-avgPredictionSimBer  = cell(Nclustering, 1);
-stdPredictionBer  = cell(Nclustering, 1);
-stdPredictionSimBer  = cell(Nclustering, 1);
-avgPrediction1 = cell(Nclustering, 1);
-avgPredictionSim1 = cell(Nclustering, 1);
-stdPrediction1 = cell(Nclustering, 1);
-stdPredictionSim1 = cell(Nclustering, 1);
-avgPrediction2 = cell(Nclustering, 1);
-avgPredictionSim2 = cell(Nclustering, 1);
-stdPrediction2 = cell(Nclustering, 1);
-stdPredictionSim2 = cell(Nclustering, 1);
-avgPrediction3 = cell(Nclustering, 1);
-avgPredictionSim3 = cell(Nclustering, 1);
-stdPrediction3 = cell(Nclustering, 1);
-stdPredictionSim3 = cell(Nclustering, 1);
-avgPrediction4 = cell(Nclustering, 1);
-avgPredictionSim4 = cell(Nclustering, 1);
-stdPrediction4 = cell(Nclustering, 1);
-stdPredictionSim4 = cell(Nclustering, 1);
+Nclustering = 20;
+avgPrediction1Ber  = cell(Nclustering, 1);
+avgPrediction2Ber  = cell(Nclustering, 1);
+stdPrediction1Ber  = cell(Nclustering, 1);
+stdPrediction2Ber  = cell(Nclustering, 1);
+avgPrediction1MN1 = cell(Nclustering, 1);
+avgPrediction2MN1 = cell(Nclustering, 1);
+stdPrediction1MN1 = cell(Nclustering, 1);
+stdPrediction2MN1 = cell(Nclustering, 1);
+avgPrediction1MN2 = cell(Nclustering, 1);
+avgPrediction2MN2 = cell(Nclustering, 1);
+stdPrediction1MN2 = cell(Nclustering, 1);
+stdPrediction2MN2 = cell(Nclustering, 1);
+avgPrediction1MN3 = cell(Nclustering, 1);
+avgPrediction2MN3 = cell(Nclustering, 1);
+stdPrediction1MN3 = cell(Nclustering, 1);
+stdPrediction2MN3 = cell(Nclustering, 1);
+avgPrediction1MN4 = cell(Nclustering, 1);
+avgPrediction2MN4 = cell(Nclustering, 1);
+stdPrediction1MN4 = cell(Nclustering, 1);
+stdPrediction2MN4 = cell(Nclustering, 1);
  
 for k = 1:Nclustering
 k
-    [L, G, Tp, groups, tag_groups, popularity] = clusterTags(Lp, Tp, K, TAGS_name, tagged_ARTISTS, prunedTagsIDs);
+    [L, pG, G, Tp, groups, tag_groups, popularity] = clusterTags(Lp, Tp, K, TAGS_name, tagged_ARTISTS, prunedTagsIDs);
     tag_groups_all{k} = tag_groups;
     groups_all{k} = groups;
     % Bernoulli
-    [avgPredictionBer{k}, stdPredictionBer{k},...
-    avgPredictionSimBer{k}, stdPredictionSimBer{k}]...
-    = estimateBayesianTagClusterPrediction(L, G, Ntrials, testingPortion, estUserPreferencesFn, @estimateCondititonalBernoulli, estPosteriorProbabilityFn);
+    [avgPrediction1Ber{k}, stdPrediction1Ber{k},...
+    avgPrediction2Ber{k}, stdPrediction2Ber{k}]...
+    = estimateBayesianTagClusterPrediction(L, pG, G, Ntrials, testingPortion, estUserPreferencesFn, @estimateCondititonalBernoulli, estPosteriorProbabilityFn);
     % Multinomial
-    [avgPrediction1{k}, stdPrediction1{k},...
-    avgPredictionSim1{k}, stdPredictionSim1{k}]...
-    = estimateBayesianTagClusterPrediction(L, G, Ntrials, testingPortion, estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
+    [avgPrediction1MN1{k}, stdPrediction1MN1{k},...
+    avgPrediction2MN1{k}, stdPrediction2MN1{k}]...
+    = estimateBayesianTagClusterPrediction(L, pG,  G, Ntrials, testingPortion, estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
     % round(log2(Lf + 1))
-    [avgPrediction2{k}, stdPrediction2{k},...
-    avgPredictionSim2{k}, stdPredictionSim2{k}]...
-    = estimateBayesianTagClusterPrediction(round(log2(L + 1)), G, Ntrials, testingPortion,estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
+    [avgPrediction1MN2{k}, stdPrediction1MN2{k},...
+    avgPrediction2MN2{k}, stdPrediction2MN2{k}]...
+    = estimateBayesianTagClusterPrediction(round(log2(L + 1)), pG,  G, Ntrials, testingPortion,estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
     % round(log10(Lf + 1))
-    [avgPrediction3{k}, stdPrediction3{k},...
-    avgPredictionSim3{k}, stdPredictionSim3{k}]...
-    = estimateBayesianTagClusterPrediction(round(log10(L + 1)), G, Ntrials, testingPortion,estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
+    [avgPrediction1MN3{k}, stdPrediction1MN3{k},...
+    avgPrediction2MN3{k}, stdPrediction2MN3{k}]...
+    = estimateBayesianTagClusterPrediction(round(log10(L + 1)), pG,  G, Ntrials, testingPortion,estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
     % double(Lf ~= 0)
-    [avgPrediction4{k}, stdPrediction4{k},...
-    avgPredictionSim4{k}, stdPredictionSim4{k}]...
-    = estimateBayesianTagClusterPrediction(double(L ~= 0), G, Ntrials, testingPortion,estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
+    [avgPrediction1MN4{k}, stdPrediction1MN4{k},...
+    avgPrediction2MN4{k}, stdPrediction2MN4{k}]...
+    = estimateBayesianTagClusterPrediction(double(L ~= 0), pG,  G, Ntrials, testingPortion,estUserPreferencesFn, @estimateCondititonalMultinomial, estPosteriorProbabilityFn);
 end
 
 
@@ -156,126 +156,126 @@ end
 % visualizeCategoryPredictionRates(avgPredictionSim1(:, 1), stdPredictionSim1(:, 1), testingPortion, {'MN: 1 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
 % visualizeCategoryPredictionRates(avgPrediction1(:, 2), stdPrediction1(:, 2), testingPortion, {'MN: 2 category'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', [0, 0.4470, 0.7410]));
 % visualizeCategoryPredictionRates(avgPredictionSim1(:, 2), stdPredictionSim1(:, 2), testingPortion, {'MN: 2 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', [0, 0.4470, 0.7410]));
-avgPrediction1K20 = zeros(9, 19);
-stdPrediction1K20 = zeros(9, 19);
-avgPrediction2K20 = zeros(9, 19);
-stdPrediction2K20 = zeros(9, 19);
-avgPrediction3K20 = zeros(9, 19);
-stdPrediction3K20 = zeros(9, 19);
-avgPrediction4K20 = zeros(9, 19);
-stdPrediction4K20 = zeros(9, 19);
-avgPredictionBerK20 = zeros(9, 19);
-stdPredictionBerK20 = zeros(9, 19);
+avgPrediction1K20 = zeros(length(testingPortion), 19);
+stdPrediction1K20 = zeros(length(testingPortion), 19);
+avgPrediction2K20 = zeros(length(testingPortion), 19);
+stdPrediction2K20 = zeros(length(testingPortion), 19);
+avgPrediction3K20 = zeros(length(testingPortion), 19);
+stdPrediction3K20 = zeros(length(testingPortion), 19);
+avgPrediction4K20 = zeros(length(testingPortion), 19);
+stdPrediction4K20 = zeros(length(testingPortion), 19);
+avgPredictionBerK20 = zeros(length(testingPortion), 19);
+stdPredictionBerK20 = zeros(length(testingPortion), 19);
 
-avgPredictionSim1K20 = zeros(9, 19);
-stdPredictionSim1K20 = zeros(9, 19);
-avgPredictionSim2K20 = zeros(9, 19);
-stdPredictionSim2K20 = zeros(9, 19);
-avgPredictionSim3K20 = zeros(9, 19);
-stdPredictionSim3K20 = zeros(9, 19);
-avgPredictionSim4K20 = zeros(9, 19);
-stdPredictionSim4K20 = zeros(9, 19);
-avgPredictionSimBerK20 = zeros(9, 19);
-stdPredictionSimBerK20 = zeros(9, 19);
+avgPredictionSim1K20 = zeros(length(testingPortion), 19);
+stdPredictionSim1K20 = zeros(length(testingPortion), 19);
+avgPredictionSim2K20 = zeros(length(testingPortion), 19);
+stdPredictionSim2K20 = zeros(length(testingPortion), 19);
+avgPredictionSim3K20 = zeros(length(testingPortion), 19);
+stdPredictionSim3K20 = zeros(length(testingPortion), 19);
+avgPredictionSim4K20 = zeros(length(testingPortion), 19);
+stdPredictionSim4K20 = zeros(length(testingPortion), 19);
+avgPredictionSimBerK20 = zeros(length(testingPortion), 19);
+stdPredictionSimBerK20 = zeros(length(testingPortion), 19);
 
 for k = 1:Nclustering
-    rowsInds = 1:size(avgPrediction1{k},1);
-    colsInds = 1: size(avgPrediction1{k},2);
+    rowsInds = 1:size(avgPrediction1MN1{k},1);
+    colsInds = 1:size(avgPrediction1MN1{k},2);
     avgPrediction1K20(rowsInds, colsInds) =... 
     avgPrediction1K20(rowsInds, colsInds) +...
-    avgPrediction1{k};
+    avgPrediction1MN1{k};
     stdPrediction1K20(rowsInds, colsInds) =...
     stdPrediction1K20(rowsInds, colsInds) +...
-    stdPrediction1{k};
+    stdPrediction1MN1{k};
 
-    rowsInds = 1:size(avgPrediction2{k},1);
-    colsInds = 1: size(avgPrediction2{k},2);
+    rowsInds = 1:size(avgPrediction1MN2{k},1);
+    colsInds = 1: size(avgPrediction1MN2{k},2);
     avgPrediction2K20(rowsInds, colsInds) =... 
     avgPrediction2K20(rowsInds, colsInds) +...
-    avgPrediction2{k};
+    avgPrediction1MN2{k};
     stdPrediction2K20(rowsInds, colsInds) =...
     stdPrediction2K20(rowsInds, colsInds) +...
-    stdPrediction2{k};
+    stdPrediction1MN2{k};
 
 
-    rowsInds = 1:size(avgPrediction3{k},1);
-    colsInds = 1: size(avgPrediction3{k},2);
+    rowsInds = 1:size(avgPrediction1MN3{k},1);
+    colsInds = 1: size(avgPrediction1MN3{k},2);
     avgPrediction3K20(rowsInds, colsInds) =... 
     avgPrediction3K20(rowsInds, colsInds) +...
-    avgPrediction3{k};
+    avgPrediction1MN3{k};
     stdPrediction3K20(rowsInds, colsInds) =...
     stdPrediction3K20(rowsInds, colsInds) +...
-    stdPrediction3{k};
+    stdPrediction1MN3{k};
 
 
-    rowsInds = 1:size(avgPrediction4{k},1);
-    colsInds = 1: size(avgPrediction4{k},2);
+    rowsInds = 1:size(avgPrediction1MN4{k},1);
+    colsInds = 1: size(avgPrediction1MN4{k},2);
     avgPrediction4K20(rowsInds, colsInds) =... 
     avgPrediction4K20(rowsInds, colsInds) +...
-    avgPrediction4{k};
+    avgPrediction1MN4{k};
     stdPrediction4K20(rowsInds, colsInds) =...
     stdPrediction4K20(rowsInds, colsInds) +...
-    stdPrediction4{k};
+    stdPrediction1MN4{k};
 
-    rowsInds = 1:size(avgPredictionBer{k},1);
-    colsInds = 1: size(avgPredictionBer{k},2);
+    rowsInds = 1:size(avgPrediction1Ber{k},1);
+    colsInds = 1: size(avgPrediction1Ber{k},2);
     avgPredictionBerK20(rowsInds, colsInds) =... 
     avgPredictionBerK20(rowsInds, colsInds) +...
-    avgPredictionBer{k};
+    avgPrediction1Ber{k};
     stdPredictionBerK20(rowsInds, colsInds) =...
     stdPredictionBerK20(rowsInds, colsInds) +...
-    stdPredictionBer{k};
+    stdPrediction1Ber{k};
 
 
 
 
 
-    rowsInds = 1:size(avgPredictionSim1{k},1);
-    colsInds = 1: size(avgPredictionSim1{k},2);
+    rowsInds = 1:size(avgPrediction2MN1{k},1);
+    colsInds = 1: size(avgPrediction2MN1{k},2);
     avgPredictionSim1K20(rowsInds, colsInds) =... 
     avgPredictionSim1K20(rowsInds, colsInds) +...
-    avgPredictionSim1{k};
+    avgPrediction2MN1{k};
     stdPredictionSim1K20(rowsInds, colsInds) =...
     stdPredictionSim1K20(rowsInds, colsInds) +...
-    stdPredictionSim1{k};
+    stdPrediction2MN1{k};
 
-    rowsInds = 1:size(avgPredictionSim2{k},1);
-    colsInds = 1: size(avgPredictionSim2{k},2);
+    rowsInds = 1:size(avgPrediction2MN2{k},1);
+    colsInds = 1: size(avgPrediction2MN2{k},2);
     avgPredictionSim2K20(rowsInds, colsInds) =... 
     avgPredictionSim2K20(rowsInds, colsInds) +...
-    avgPredictionSim2{k};
+    avgPrediction2MN2{k};
     stdPredictionSim2K20(rowsInds, colsInds) =...
     stdPredictionSim2K20(rowsInds, colsInds) +...
-    stdPredictionSim2{k};
+    stdPrediction2MN2{k};
 
 
-    rowsInds = 1:size(avgPredictionSim3{k},1);
-    colsInds = 1: size(avgPredictionSim3{k},2);
+    rowsInds = 1:size(avgPrediction2MN3{k},1);
+    colsInds = 1: size(avgPrediction2MN3{k},2);
     avgPredictionSim3K20(rowsInds, colsInds) =... 
     avgPredictionSim3K20(rowsInds, colsInds) +...
-    avgPredictionSim3{k};
+    avgPrediction2MN3{k};
     stdPredictionSim3K20(rowsInds, colsInds) =...
     stdPredictionSim3K20(rowsInds, colsInds) +...
-    stdPredictionSim3{k};
+    stdPrediction2MN3{k};
 
 
-    rowsInds = 1:size(avgPredictionSim4{k},1);
-    colsInds = 1: size(avgPredictionSim4{k},2);
+    rowsInds = 1:size(avgPrediction2MN4{k},1);
+    colsInds = 1: size(avgPrediction2MN4{k},2);
     avgPredictionSim4K20(rowsInds, colsInds) =... 
     avgPredictionSim4K20(rowsInds, colsInds) +...
-    avgPredictionSim4{k};
+    avgPrediction2MN4{k};
     stdPredictionSim4K20(rowsInds, colsInds) =...
     stdPredictionSim4K20(rowsInds, colsInds) +...
-    stdPredictionSim4{k};
+    stdPrediction2MN4{k};
 
-    rowsInds = 1:size(avgPredictionSimBer{k},1);
-    colsInds = 1: size(avgPredictionSimBer{k},2);
+    rowsInds = 1:size(avgPrediction2Ber{k},1);
+    colsInds = 1: size(avgPrediction2Ber{k},2);
     avgPredictionSimBerK20(rowsInds, colsInds) =... 
     avgPredictionSimBerK20(rowsInds, colsInds) +...
-    avgPredictionSimBer{k};
+    avgPrediction2Ber{k};
     stdPredictionSimBerK20(rowsInds, colsInds) =...
     stdPredictionSimBerK20(rowsInds, colsInds) +...
-    stdPredictionSimBer{k};
+    stdPrediction2Ber{k};
 
 end
 avgPrediction1K20 = avgPrediction1K20 / Nclustering;

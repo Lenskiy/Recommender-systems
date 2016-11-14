@@ -37,7 +37,7 @@ function [predictionRate1, predictionRate2] = performanceRate(log_posterior, G, 
     end
 
     for k = 1:maxNumOfGenPerMovies
-        numMoviesNumGeners(k) = sum(sum(ceil(G)') == k);
+        numMoviesNumGeners(k) = sum(sum(ceil(G), 2) == k);
     end
     
     for k = 1:maxNumOfGenPerMovies
