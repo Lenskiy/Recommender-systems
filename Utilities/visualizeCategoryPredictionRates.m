@@ -32,7 +32,7 @@ function visualizeCategoryPredictionRates(avgPredicationRates, stdPredicationRat
 	ghandler.XTick = [1:(length(t_list))];
 	ghandler.XTickLabel =  [t_list]*100;
     prevLabels = get(legend(gca),'String');
-	legend([prevLabels, labels],'Location','northwest','Orientation','vertical','FontWeight','bold');
+	legend([prevLabels, labels],'Location','best','Orientation','vertical','FontWeight','bold');
 	legend('boxoff');
 
 end

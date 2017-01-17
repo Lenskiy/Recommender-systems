@@ -1,4 +1,4 @@
-function logPr_ItemInCategory = estimateCondititonalMultinomial(R, Pr_UratedC)
+function logPr_ItemInCategory = estimateCondititonalMultinomial(R, Pr_UratedC, priorC)
     Nitems = size(R,2);     %number of items
     Nusers = size(R,1);       %number of users
     Ncategories = size(Pr_UratedC, 2);  %number of genres

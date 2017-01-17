@@ -5,7 +5,7 @@ function Gp = matchMovieToClosest(G_, G)
     for k = 1:length(indZeros)
         match = [];
         for j = 1:size(G_,3)
-            match(j) = sum(G_(indZeros(k),1:18,j) .* G(indZeros(k), :));
+            match(j) = sum(G_(indZeros(k),1:size(G,2),j) .* G(indZeros(k), :));
         end
         [~, mind]= max(match);
         Gp(indZeros(k), :) = G_(indZeros(k),:,mind);        

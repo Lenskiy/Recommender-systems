@@ -53,7 +53,7 @@ bar(tagsUsed(1:99)/sum(hist_tags)); xlabel('$k$', 'Interpreter', 'Latex'); ylabe
 %% Tag clustering
 K = 20; % number of tag clusters, which are treated as genres
 [Lp, Tp, prunedTagsIDs]= prepocessForClustering(L_, T, 5, 50);
-[Lf, G, Tp, groups, tag_groups, popularity] = clusterTags(Lp, Tp, K, TAGS_name, tagged_ARTISTS, prunedTagsIDs);
+[Lf, pG, G, Tp, groups, tag_groups, popularity] = clusterTags(Lp, Tp, K, TAGS_name, tagged_ARTISTS, prunedTagsIDs);
 
 
 figure('Position', [100, 100, 648, 309]), hold on, grid on;
@@ -99,10 +99,10 @@ estUserPreferencesFn = @buildUserPrefenceModel; % slightly different from @estim
 estLiklihoodFn = @estimateCondititonalBernoulli; %; estimateCondititonalMultinomial % estimateCondititonalBernoulli
 estPosteriorProbabilityFn = @estimatePosteriorProbability;
 
-testingPortion = [0.01, 0.05, 0.1:0.1:0.8];
+testingPortion = [0.01, 0.05, 0.1:0.1:0.8]';
 
 Ntrials = 100;
-Nclustering = 20;
+Nclustering = 100;
 avgPrediction1Ber  = cell(Nclustering, 1);
 avgPrediction2Ber  = cell(Nclustering, 1);
 stdPrediction1Ber  = cell(Nclustering, 1);
@@ -300,32 +300,19 @@ stdPredictionSim4K20 = stdPredictionSim4K20 / Nclustering;
 avgPredictionSimBerK20 = avgPredictionSimBerK20 / Nclustering;
 stdPredictionSimBerK20 = stdPredictionSimBerK20 / Nclustering;
 
-visualizeCategoryPredictionRates(avgPrediction1K20(:, 1), stdPrediction1K20(:, 1), testingPortion, {'MN: 1 category'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPrediction2K20(:, 1), stdPrediction2K20(:, 1), testingPortion, {'MN log2: 1 category'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPrediction3K20(:, 1), stdPrediction3K20(:, 1), testingPortion, {'MN log10: 1 category'}, false, struct('LineWidth', 2, 'LineStyle', '-.', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPrediction4K20(:, 1), stdPrediction4K20(:, 1), testingPortion, {'Categorical : 1 category'}, false, struct('LineWidth', 2, 'LineStyle', ':', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionBerK20(:, 1), stdPredictionBerK20(:, 1), testingPortion, {'Ber: 1 category'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0.8500, 0.3250, 0.0980]));
-
-
-visualizeCategoryPredictionRates(avgPredictionSim1K20(:, 1), stdPredictionSim1K20(:, 1), testingPortion, {'MN: 1 w/ cor.'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSim2K20(:, 1), stdPredictionSim2K20(:, 1), testingPortion, {'MN log2: 1 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSim3K20(:, 1), stdPredictionSim3K20(:, 1), testingPortion, {'MN log10: 1 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '-.', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSim4K20(:, 1), stdPredictionSim4K20(:, 1), testingPortion, {'Categorical : 1 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', ':', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSimBerK20(:, 1), stdPredictionSimBerK20(:, 1), testingPortion, {'Ber: 1 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0.8500, 0.3250, 0.0980]));
-
+visualizeCategoryPredictionRatesFilled(avgPrediction1K20(:, 1), stdPrediction1K20(:, 1), testingPortion, {'MN: 1 category'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', colors(1,:)));
+visualizeCategoryPredictionRatesFilled(avgPrediction2K20(:, 1), stdPrediction2K20(:, 1), testingPortion, {'MN log2: 1 category'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', colors(2,:)));
+visualizeCategoryPredictionRatesFilled(avgPrediction3K20(:, 1), stdPrediction3K20(:, 1), testingPortion, {'MN log10: 1 category'}, false, struct('LineWidth', 2, 'LineStyle', '-.', 'color', colors(3,:)));
+visualizeCategoryPredictionRatesFilled(avgPrediction4K20(:, 1), stdPrediction4K20(:, 1), testingPortion, {'Categorical : 1 category'}, false, struct('LineWidth', 2, 'LineStyle', ':', 'color', colors(4,:)));
+visualizeCategoryPredictionRatesFilled(avgPredictionBerK20(:, 1), stdPredictionBerK20(:, 1), testingPortion, {'Ber: 1 category'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', colors(5,:)));
+%legend({'MN: 1 category', 'MN log2: 1 category', 'MN log10: 1 category', 'Categorical : 1 category', 'Ber: 1 category'}, 'Location','best','Orientation','vertical','FontWeight','bold');
+%legend('boxoff');
 
 visualizeCategoryPredictionRates(avgPrediction1K20(:, 2), stdPrediction1K20(:, 2), testingPortion, {'MN: 2 category'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
 visualizeCategoryPredictionRates(avgPrediction2K20(:, 2), stdPrediction2K20(:, 2), testingPortion, {'MN log2: 2 category'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', [0, 0.4470, 0.7410]));
 visualizeCategoryPredictionRates(avgPrediction3K20(:, 2), stdPrediction3K20(:, 2), testingPortion, {'MN log10: 2 category'}, false, struct('LineWidth', 2, 'LineStyle', '-.', 'color', [0, 0.4470, 0.7410]));
 visualizeCategoryPredictionRates(avgPrediction4K20(:, 2), stdPrediction4K20(:, 2), testingPortion, {'Categorical : 2 category'}, false, struct('LineWidth', 2, 'LineStyle', ':', 'color', [0, 0.4470, 0.7410]));
 visualizeCategoryPredictionRates(avgPredictionBerK20(:, 2), stdPredictionBerK20(:, 2), testingPortion, {'Ber: 2 category'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0.8500, 0.3250, 0.0980]));
-
-
-visualizeCategoryPredictionRates(avgPredictionSim1K20(:, 2), stdPredictionSim1K20(:, 2), testingPortion, {'MN: 2 w/ cor.'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSim2K20(:, 2), stdPredictionSim2K20(:, 2), testingPortion, {'MN log2: 2 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSim3K20(:, 2), stdPredictionSim3K20(:, 2), testingPortion, {'MN log10: 2 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '-.', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSim4K20(:, 2), stdPredictionSim4K20(:, 2), testingPortion, {'Categorical : 2 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', ':', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSimBerK20(:, 2), stdPredictionSimBerK20(:, 2), testingPortion, {'Ber: 2 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0.8500, 0.3250, 0.0980]));
 
 
 visualizeCategoryPredictionRates(avgPrediction1K20(:, 3), stdPrediction1K20(:, 3), testingPortion, {'MN: 3 category'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
@@ -335,12 +322,25 @@ visualizeCategoryPredictionRates(avgPrediction4K20(:, 3), stdPrediction4K20(:, 3
 visualizeCategoryPredictionRates(avgPredictionBerK20(:, 3), stdPredictionBerK20(:, 3), testingPortion, {'Ber: 3 category'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0.8500, 0.3250, 0.0980]));
 
 
+visualizeCategoryPredictionRates(avgPredictionSim1K20(:, 1), stdPredictionSim1K20(:, 1), testingPortion, {'MN: 1/3'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSim2K20(:, 1), stdPredictionSim2K20(:, 1), testingPortion, {'MN log2: 1/3'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSim3K20(:, 1), stdPredictionSim3K20(:, 1), testingPortion, {'MN log10: 1/3'}, false, struct('LineWidth', 2, 'LineStyle', '-.', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSim4K20(:, 1), stdPredictionSim4K20(:, 1), testingPortion, {'Categorical : 1/3'}, false, struct('LineWidth', 2, 'LineStyle', ':', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSimBerK20(:, 1), stdPredictionSimBerK20(:, 1), testingPortion, {'Ber: 1/3'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0.8500, 0.3250, 0.0980]));
 
-visualizeCategoryPredictionRates(avgPredictionSim1K20(:, 3), stdPredictionSim1K20(:, 3), testingPortion, {'MN: 3 w/ cor.'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSim2K20(:, 3), stdPredictionSim2K20(:, 3), testingPortion, {'MN log2: 3 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSim3K20(:, 3), stdPredictionSim3K20(:, 3), testingPortion, {'MN log10: 3 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '-.', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSim4K20(:, 3), stdPredictionSim4K20(:, 3), testingPortion, {'Categorical : 3 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', ':', 'color', [0, 0.4470, 0.7410]));
-visualizeCategoryPredictionRates(avgPredictionSimBerK20(:, 3), stdPredictionSimBerK20(:, 3), testingPortion, {'Ber: 3 w/ cor.'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0.8500, 0.3250, 0.0980]));
+
+visualizeCategoryPredictionRates(avgPredictionSim1K20(:, 2), stdPredictionSim1K20(:, 2), testingPortion, {'MN: 2/3'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSim2K20(:, 2), stdPredictionSim2K20(:, 2), testingPortion, {'MN log2: 2/3'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSim3K20(:, 2), stdPredictionSim3K20(:, 2), testingPortion, {'MN log10: 2/3'}, false, struct('LineWidth', 2, 'LineStyle', '-.', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSim4K20(:, 2), stdPredictionSim4K20(:, 2), testingPortion, {'Categorical : 2/3'}, false, struct('LineWidth', 2, 'LineStyle', ':', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSimBerK20(:, 2), stdPredictionSimBerK20(:, 2), testingPortion, {'Ber: 2/3'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0.8500, 0.3250, 0.0980]));
+
+
+visualizeCategoryPredictionRates(avgPredictionSim1K20(:, 3), stdPredictionSim1K20(:, 3), testingPortion, {'MN: 3/3'}, true, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSim2K20(:, 3), stdPredictionSim2K20(:, 3), testingPortion, {'MN log2: 3/3'}, false, struct('LineWidth', 2, 'LineStyle', '--', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSim3K20(:, 3), stdPredictionSim3K20(:, 3), testingPortion, {'MN log10: 3/3'}, false, struct('LineWidth', 2, 'LineStyle', '-.', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSim4K20(:, 3), stdPredictionSim4K20(:, 3), testingPortion, {'Categorical : 3/3'}, false, struct('LineWidth', 2, 'LineStyle', ':', 'color', [0, 0.4470, 0.7410]));
+visualizeCategoryPredictionRates(avgPredictionSimBerK20(:, 3), stdPredictionSimBerK20(:, 3), testingPortion, {'Ber: 3/3'}, false, struct('LineWidth', 2, 'LineStyle', '-', 'color', [0.8500, 0.3250, 0.0980]));
 
 
 

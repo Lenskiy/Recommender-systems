@@ -1,12 +1,24 @@
-function [G, toCheck] = buildIMDBGenreMatrix(titles, titlesMLLatest, movieIdMLLatest, linksMLLatest, genresList)
-    apikey = '8be855ec';
+function [G, toCheck] = buildIMDBGenreMatrix(movies, item_set_from_ratings, titlesMLLatest, movieIdMLLatest, linksMLLatest, genresList)
+    api_key = '81595c91-3f8e-434e-a858-d5c5d4950a66';
+    
+    for i = 1:size(movies,1)
+        moviesID(i) = movies{i,1};
+        titles{i} = movies{i,2};
+    end
+    
+    
     titles = lower(titles);
     titlesMLLatest = lower(titlesMLLatest);
     options = weboptions('Timeout', 100);
-    G = zeros(size(titles,1), length(genresList));
+    G = zeros(length(item_set_from_ratings), length(genresList));
     
     toCheck = [];
-    for k = 1:length(titles)
+    for k = 1:length(moviesID)
+        disp(['Completed: ', num2str(100 * k/length(item_set_from_ratings)), '%']);
+        ind = find(moviesID(k) == item_set_from_ratings);
+        if(isempty(ind))
+            continue;
+        end
         flag = 0; %more than one movie with a similar name;
         [title_only1, year_only1] = parseTitle(titles{k});
         for j = 1:length(titlesMLLatest)
@@ -31,24 +43,26 @@ function [G, toCheck] = buildIMDBGenreMatrix(titles, titlesMLLatest, movieIdMLLa
                 end
                 
                 if(flag) % if set, a movie with the same name has alread matched
-                    toCheck = [toCheck, k];  
+                    toCheck = [toCheck, ind];  
                 end
                 flag = flag + 1;
                 
                 idMLLatest = movieIdMLLatest(j);
                 loc = find(linksMLLatest(:,1) == idMLLatest);
                 data = webread(['http://imdb.wemakesites.net/api/tt',... 
-                    sprintf('%07d',linksMLLatest(loc, 2))], options);
+                    sprintf('%07d?api_key=%s',linksMLLatest(loc, 2), api_key)], options);
 %                 data = webread(['http://img.omdbapi.com/?i=tt',... 
 %                     sprintf('%07d',linksMLLatest(loc, 2)), '&apikey=', apikey], options);                
-
+                if(isempty(data))
+                    continue;
+                end
                 jsonobj = loadjson(data);
                 if(~isempty(jsonobj.data))
-                    disp([num2str(k),  titles{k} ,'|', titlesMLLatest{j}, '|' jsonobj.data.genres]);
+                    disp([num2str(ind),  titles{k} ,'|', titlesMLLatest{j}, '|' jsonobj.data.genres]);
                     for i = 1:length(jsonobj.data.genres)
                         for l = 1:length(genresList)
                             if(strcmp(lower(jsonobj.data.genres{i}), lower(genresList{l})))
-                                G(k, l, flag) = 1;
+                                G(ind, l, flag) = 1;
                             end
                         end
                     end
